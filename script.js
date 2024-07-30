@@ -762,10 +762,56 @@ console.log(movements);
 /// return > 0, - B,A
 
 /// Ascending
-movements.sort((a, b) => a - b);
+// movements.sort((a, b) => a - b);
 
-console.log(movements);
+// console.log(movements);
+// const x = new Array(7);
 
-/// Descending
-movements.sort((a, b) => b - a);
-console.log(movements);
+// /// Descending
+// movements.sort((a, b) => b - a);
+// console.log(movements);
+
+// /// makes 7 empty arrays
+// console.log(x.map(() => 5));
+// /// also 7 empty arrays
+
+// /// FILL
+// x.fill(1, 3, 5);
+// console.log(x);
+// /// filling with 1, starting at 3, and ending at 5
+
+// const arrs = [1, 2, 3, 4, 5, 6, 7, 8];
+
+// arrs.fill(23, 4, 6);
+// console.log(arrs);
+// /// fill inside an array
+
+// // Array.from
+const x = new Array(7);
+/// 7 empty arrays ^
+
+const y = Array.from({ length: 7 }, () => 1);
+console.log(y);
+
+/// makes a 7 new empty array called x
+/// y is array.from
+/// spans the length of 7, and inputs 1
+
+const z = Array.from({ length: 7 }, (_, i) => i + 1);
+console.log(z);
+
+/// _ is a throw away variable
+/// i + 1
+
+labelBalance.addEventListener("click", function () {
+  const movementsUI = Array.from(
+    document.querySelectorAll(".movements__value"),
+    (el) => Number(el.textContent.replace("€", ""))
+  );
+  console.log(movementsUI);
+});
+
+/// used array.from to create an array from the result of the the querySelectorAll
+/// this gave us a node list, which is the values we saw in the previous photos
+/// we then added another arguement, this converter each element to a number
+/// and then replaced the € with a blank space
