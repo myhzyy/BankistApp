@@ -815,3 +815,171 @@ labelBalance.addEventListener("click", function () {
 /// this gave us a node list, which is the values we saw in the previous photos
 /// we then added another arguement, this converter each element to a number
 /// and then replaced the € with a blank space
+
+/// Array Methods Practise
+
+/// 1 : adding all the bank account movements together
+
+const bankDepositsSum = accounts
+  .flatMap((acc) => acc.movements)
+  .filter((mov) => mov > 0)
+  .reduce((sum, cur) => sum + cur, 0);
+console.log(bankDepositsSum);
+
+/// filter is filtering just the positive values
+/// reduce adds them all together
+
+/// 2 :
+
+// const numDeposits1000 = accounts
+//   .flatMap((acc) => acc.movements)
+//   .filter((mov) => mov >= 1000).length;
+// console.log(numDeposits1000);
+
+const numDeposits1000 = accounts
+  .flatMap((acc) => acc.movements)
+  .reduce((count, cur) => (cur > 1000 ? count + 1 : count), 0);
+
+console.log(numDeposits1000);
+
+/// reduce
+/// flatmap so we dont mutate the original array
+/// reduce count (is the snowball)
+/// cur, is the values
+/// if a cur value is > 1000, then log count + 1
+/// the count is each iteration, and the plus 1 is because it is zero based
+/// : if it's not 1000, return count, which is just 0
+
+// prefix ++ operator
+
+let a = 10;
+console.log(++a);
+console.log(a);
+
+/// 3 :
+
+const { depositz, withdrawalz } = accounts
+  .flatMap((acc) => acc.movements)
+  .reduce(
+    (sums, cur) => {
+      // cur > 0 ? (sums.depositz += cur) : (sums.withdrawalz = +cur);
+      sums[cur > 0 ? "depositz" : "withdrawalz"] += cur;
+      return sums;
+    },
+    { depositz: 0, withdrawalz: 0 }
+  );
+
+console.log(depositz, withdrawalz);
+
+/// 4 :
+/// this is a nice title => This Is a Nice Title
+
+const convertTitleCase = function (title) {
+  const capitalzise = (str) => str[0].toUpperCase() + str.slice(1);
+
+  const excepections = [
+    "a",
+    "an",
+    "and",
+    "the",
+    "but",
+    "or",
+    "on",
+    "in",
+    "with",
+  ];
+
+  const titleCase = title
+    .toLowerCase()
+    .split(" ")
+    .map((word) => (excepections.includes(word) ? word : capitalzise(word)))
+    .join(" ");
+  return capitalzise(titleCase);
+};
+
+console.log(convertTitleCase("this is a nice title"));
+console.log(convertTitleCase("this is a LONG title but not too long"));
+console.log(convertTitleCase("and here is another title with an EXAMPLE"));
+
+/// adding 'and' into the exceptions
+/// this then made it so if the first word was 'and', it was NOT capalised
+/// to fix this, we refactored the methods and made a const capitalize
+
+/// we then added this to the ternary
+/// and called it on the return
+
+const dogs = [
+  { weight: 22, curFood: 250, owners: ["Alice", "Bob"] },
+  { weight: 8, curFood: 200, owners: ["Matilda"] },
+  { weight: 13, curFood: 275, owners: ["Sarah", "John"] },
+  { weight: 32, curFood: 340, owners: ["Michael"] },
+];
+
+/// 1
+
+dogs.forEach((dog) => (dog.recWeight = Math.trunc(dog.weight * 0.75 * 28)));
+console.log(dogs);
+
+/// this is taking the dogs object, and looping through it
+/// (dog) is each array in the dogs object
+/// making a new item called dog,recWeight which is = to dog.weight ** 0.75 * 28
+/// Math.Trunc to give us a whole value
+
+/// 2
+const dogSarah = dogs.find((dog) => dog.owners.includes("Sarah"));
+console.log(dogSarah);
+console.log(
+  `Sarah's dog is eating ${
+    dogSarah.curFood > dogSarah.recWeight ? "Too much food" : "Too Little"
+  }`
+);
+
+/// dogs.find, this looks for the object
+/// dog is each of the array items, it's like ur in the dogs array starting point
+/// dog.owners.includes('Sarah')
+/// this will get the dogs object that includes 'Sarah'
+/// console logging if it's eating too much or too little using Ternary
+
+/// 3
+const ownersEatTooMuch = dogs
+  .filter((dog) => dog.curFood > dog.recWeight)
+  .map((dog) => dog.owners)
+  .flat();
+
+console.log(ownersEatTooMuch);
+
+const ownersEatTooLittle = dogs
+  .filter((dog) => dog.curFood < dog.recWeight)
+  .map((dog) => dog.owners)
+  .flat();
+
+console.log(ownersEatTooLittle);
+
+/// dogs.filter. this logs the 2 objects of dogs that eat more than the recWeight
+/// .map puts the owners in seperate arrays
+/// .flat puts them all into 1 array
+
+/// 4
+console.log(
+  ` ${ownersEatTooMuch.join(
+    " and "
+  )}'s Dogs eat too much!, and ${ownersEatTooLittle.join(
+    " and "
+  )}'s Dogs eat too little!`
+);
+
+/// 5
+console.log(dogs.some((dog) => dog.curFood === dog.recWeight));
+
+/// 6
+const checkEatingOkay = (dog) =>
+  dog.curFood > dog.recWeight * 0.9 && dog.curFood < dog.recWeight * 1.1;
+
+console.log(dogs.some(checkEatingOkay));
+
+/// 7 -
+console.log(dogs.filter(checkEatingOkay));
+
+/// 8 - ascending order
+const dogsSorted = dogs.slice().sort((a, b) => a.curFood - b.curFood);
+console.log(dogsSorted);
