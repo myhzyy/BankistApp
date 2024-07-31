@@ -983,3 +983,34 @@ console.log(dogs.filter(checkEatingOkay));
 /// 8 - ascending order
 const dogsSorted = dogs.slice().sort((a, b) => a.curFood - b.curFood);
 console.log(dogsSorted);
+
+const dogz = [
+  { weight: 22, curFood: 250, owners: ["Alice", "Bob"] },
+  { weight: 8, curFood: 200, owners: ["Matilda"] },
+  { weight: 13, curFood: 275, owners: ["Sarah", "John"] },
+  { weight: 32, curFood: 340, owners: ["Michael"] },
+];
+
+/// DIFFERENT TEST
+
+/// 1
+dogz.forEach((dog) => (dog.Foodies = dog.weight + 100));
+console.log(dogz);
+
+// 2
+
+const dogzSarah = dogz.find((dog) => dog.owners.includes("Sarah"));
+console.log(
+  `Sarahs dog is eating ${
+    dogz.Foodies > dogz.weight ? "Too Much Food" : "Too Little Food"
+  }`
+);
+
+// 3 -- RETEST THIS ONE
+
+const ownser = dogz
+  .filter((dog) => dog.curFood > dog.weight)
+  .map((dog) => dog.owners)
+  .flat();
+
+console.log(ownser);
