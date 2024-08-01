@@ -61,17 +61,23 @@ const inputLoanAmount = document.querySelector(".form__input--loan-amount");
 const inputCloseUsername = document.querySelector(".form__input--user");
 const inputClosePin = document.querySelector(".form__input--pin");
 
-const displayMovements = function (movements, sort = false) {
+const displayMovements = function (acc, sort = false) {
   containerMovements.innerHTML = "";
 
-  const movs = sort ? movements.slice().sort((a, b) => a - b) : movements;
+  const movs = sort
+    ? acc.movements.slice().sort((a, b) => a - b)
+    : acc.movements;
 
   movs.forEach(function (mov, i) {
     const type = mov > 0 ? "deposit" : "withdrawal";
 
+    const date = new Date(acc.movementsDates[i]);
+
     const html = `
     <div class="movements__row">
     <div class="movements__type movements__type--${type}">${i + 1} ${type}</div>
+    <div class="movements__date">${displayDate}</div>
+
     <div class="movements__value">${mov}€</div>
   </div>
     `;
@@ -137,7 +143,7 @@ createUsernames(accounts);
 
 const updateUI = function (acc) {
   /// display movements
-  displayMovements(acc.movements);
+  displayMovements(acc);
   /// display balance
   calcDisplayBalance(acc);
   /// display summary
@@ -147,6 +153,25 @@ const updateUI = function (acc) {
 /// event handler
 
 let currentAccount;
+
+/// FAKE ALWAYS LOGGED IN
+currentAccount = account1;
+updateUI(currentAccount);
+containerApp.style.opacity = 100;
+
+// day/month/yearX
+
+const timeNow = new Date();
+const day = `${timeNow.getDate()}`.padStart(2, 0);
+const month = `${timeNow.getMonth() + 1}`.padStart(2, 0);
+const year = timeNow.getFullYear();
+const hour = timeNow.getHours();
+const minutes = timeNow.getMinutes();
+labelDate.textContent = `${day}/${month}/${year}, ${hour}:${minutes}`;
+
+/// to add the zero at the beggining of day and month
+/// make template literal, and use padstart, 2 is length of characters,
+/// and 0 is what were adding
 
 btnLogin.addEventListener("click", function (e) {
   e.preventDefault();
@@ -245,7 +270,7 @@ let sorted = false;
 
 btnSort.addEventListener("click", function (e) {
   e.preventDefault();
-  displayMovements(currentAccount.movements, !sorted);
+  displayMovements(currentAccount, !sorted);
   sorted = !sorted;
 });
 
