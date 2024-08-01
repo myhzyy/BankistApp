@@ -1014,3 +1014,225 @@ const ownser = dogz
   .flat();
 
 console.log(ownser);
+
+/// 2 ?
+
+console.log(23 === 23.0);
+
+/// BASE 10 - 0 TO 9, 1/10 = 0.1, 3/10 = 3.33333333
+/// BINARY BASE 2 - 0 TO 1,
+
+console.log(0.1 + 0.2);
+console.log(0.1 + 0.2 === 0.3);
+/// will result in 0.33333333333334, so result is false
+/// cant do science or finance based logic in javascript too well
+
+// Converting Strings to Numbers
+console.log(Number("23"));
+console.log(+"23");
+/// plus does the same as adding Number
+
+// Parsing
+console.log(Number.parseInt("30px"));
+console.log(Number.parseInt("px30"));
+console.log(Number.parseInt("4fdfdggddg", 4));
+/// this converters a string to a number and ignores the symbols
+/// must start with a number
+
+// Parse Float
+console.log(Number.parseInt("2.5rem"));
+console.log(Number.parseFloat("2.5rem"));
+/// Parse Float gets decimals, PraseInt does NOT
+
+/// isNAN
+console.log(Number.isNaN(20));
+console.log(Number.isNaN("20"));
+console.log(Number.isNaN(+"20x"));
+console.log(23 / 0);
+/// is the value NOT a number
+/// is 20 a number - true, is 20 NOT a number - false
+
+/// isFinite checks if it is a number, not a string
+/// better than isNAN
+console.log(Number.isFinite(20));
+console.log(Number.isFinite("20"));
+console.log(Number.isFinite(+"20"));
+console.log(Number.isFinite(23 / 0));
+
+/// isInterger - interger is a WHOLE NUMBER
+console.log(Number.isInteger(23 / 0));
+console.log(Number.isInteger(23));
+console.log(Number.isInteger(23.333333));
+
+/// SQRT - Square Root
+console.log(Math.sqrt(25));
+/// Cubic Root
+console.log(8 ** (1 / 3));
+/// Gets the Maximum Number
+console.log(Math.max(5, 18, 23, 11, 2));
+/// Gets the Minimum Number
+console.log(Math.min(5, 18, 23, 11, 2));
+
+console.log(Math.PI * Number.parseFloat("10px") ** 2);
+
+console.log(Math.trunc(Math.random() * 6) + 1);
+
+//// TO ALWAYS GET A NUMBER BETWEEN A RANGE
+
+const randomInt = (min, max) =>
+  Math.floor(Math.random() * (max = min) + 1) + min;
+
+console.log(randomInt(10, 20));
+
+/// min and max are undefined parameter for the time being
+/// Math.Trunc,Math random is a random number between 0-1
+/// random number TIMES the max - min
+/// this means we get a number between 0, and max-min
+
+/// Rounding Intergers
+/// Rounds to the nearest decimel
+console.log(Math.round(23.3));
+/// Rounds UP to decimel
+console.log(Math.ceil(23.3));
+/// Rounds DOWN to decimel
+console.log(Math.floor(23.3));
+
+/// FLOOR VS TRUNC
+console.log(Math.trunc(-23.3));
+console.log(Math.floor(-23.3));
+/// Floor works better with minuses and all around better
+
+// Rounding decimels (floating point numhers)
+console.log((2.7).toFixed(0));
+console.log((2.7).toFixed(4));
+console.log(+(2.7).toFixed(4));
+
+/// will round decimels
+/// always returns a string
+/// the (0) adds decimel places, so 0 adds 0 decimels
+/// (4) would add 4 decimel places
+/// + converts it to a number
+
+/// number is a primitive, so it doesn't have methods
+/// because of this, it does what is called Boxing, boxing makes it a number object
+/// and then calls the method on that object, and then converts it back
+
+/// The Remainder Operator
+console.log(5 % 2); // = 1
+console.log(5 / 2); // 5 + 2 + 2 + 1 (1 is the remainder)
+console.log(8 % 3); // 2
+console.log(8 / 3); // 8 = 2 * 3 + 2 (2 is the remainder)
+
+/// The Remainder with even numbers
+console.log(6 % 2); // = 0
+/// this is because this divides into this, so they is no remainders
+
+const isEvan = (n) => n % 2 === 0;
+console.log(isEvan(8));
+/// if n is divisable by 2, it equals zero, as there is no remainder
+/// so if this number ==='s zero, it will log true
+
+/// 1
+// document.querySelectorAll('.movements__row');
+// /// this would come back as a node list, so we need to put it into a real array
+
+// /// 2
+// labelBalance.addEventListener('click', function () {
+//   [...document.querySelectorAll('.movements__row')].forEach(function (row, i) {
+//     /// 0,2,4,6...
+//     if (i % 2 === 0) row.style.backgroundColor = 'orangered';
+//     /// 0,3,6,9...
+//     if (i % 3 === 0) row.style.backgroundColor = 'blue';
+//   });
+// });
+
+/// spread operator to put it into a new array
+/// highlighting the movements__row
+/// putting each of these rows in a for each
+/// function (row) and then i
+/// this code needs to be put inside an event handler because or it would just
+/// exercute straight away and then be overrided
+
+/// Numeric Separators
+const diameter = 28746000000;
+console.log(diameter);
+
+const price = 345_99;
+console.log(price);
+
+const transferFee = 15_00;
+const transferFee2 = 1_500;
+
+const pi = 3.1415;
+
+console.log(Number("23_0000"));
+
+/// only use this in the code when working with numbers
+
+/// BigInt
+console.log(2 ** 53 - 1);
+console.log(Number.MAX_SAFE_INTEGER);
+
+/// n makes it a BigInt
+console.log(48958398240834902384098234908230498320948095890328490284n);
+console.log(BigInt(48958398240834902384098234));
+
+// operations
+console.log(10000n + 100000n);
+console.log(74892374897238975982735872398579n * 3678261786746n);
+
+const huge = 32131231234214124124n;
+const num = 23;
+/// cannot mix BigInt and normal numbers
+/// would have to make it a BigInt like below
+
+const huge1 = 32131231234214124124n;
+const num1 = 23;
+console.log(huge * BigInt(num1));
+
+/// exceptions
+console.log(28n > 15);
+console.log(20n === 20); // False bc one is big int vs normal number
+console.log(20n == 20); // loose operator will make true
+
+console.log(huge + " is REALLY big");
+
+// Divisions
+console.log(10n / 3n); /// 3n
+console.log(11n / 3n); /// 4n
+console.log(10 / 3);
+
+// Create a date
+const now = new Date();
+console.log(now);
+
+console.log(new Date("Thu Aug 01 2024 17:54:44"));
+console.log(new Date("December 24, 2015"));
+
+console.log(new Date("July 22,1996"));
+// console.log(new Date(account1.movementsDates[0]));
+
+console.log(new Date(2037, 10, 19, 23, 5));
+/// month is Zero based
+
+console.log(new Date(0));
+console.log(new Date(3 * 24 * 60 * 60 * 1000));
+
+// Working with dates
+const future = new Date(2037, 10, 19, 23, 5);
+console.log(future);
+console.log(future.getFullYear());
+console.log(future.getMonth()); /// zero based
+console.log(future.getDate());
+console.log(future.getDay());
+console.log(future.getHours());
+console.log(future.getMinutes());
+console.log(future.getSeconds());
+console.log(future.toISOString());
+console.log(future.getTime());
+
+console.log(Date.now()); /// current timeStamp
+
+future.setFullYear(2040);
+console.log(future);
+/// changes year, also ones for month,date etc
