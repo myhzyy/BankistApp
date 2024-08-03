@@ -10,6 +10,19 @@ const account1 = {
   movements: [200, 450, -400, 3000, -650, -130, 70, 1300],
   interestRate: 1.2, // %
   pin: 1111,
+
+  movementsDates: [
+    "2019-11-18T21:31:17.178Z",
+    "2019-12-23T07:42:02.383Z",
+    "2020-01-28T09:15:04.904Z",
+    "2020-04-01T10:17:24.185Z",
+    "2020-05-08T14:11:59.604Z",
+    "2020-05-27T17:01:17.194Z",
+    "2020-07-04T23:36:17.929Z",
+    "2024-08-01T10:51:36.790Z",
+  ],
+  currency: "EUR",
+  locale: "pt-PT", // de-DE
 };
 
 const account2 = {
@@ -17,6 +30,19 @@ const account2 = {
   movements: [5000, 3400, -150, -790, -3210, -1000, 8500, -30],
   interestRate: 1.5,
   pin: 2222,
+
+  movementsDates: [
+    "2019-11-01T13:15:33.035Z",
+    "2019-11-30T09:48:16.867Z",
+    "2019-12-25T06:04:23.907Z",
+    "2020-01-25T14:18:46.235Z",
+    "2020-02-05T16:33:06.386Z",
+    "2020-04-10T14:43:26.374Z",
+    "2020-06-25T18:49:59.371Z",
+    "2020-07-26T12:01:20.894Z",
+  ],
+  currency: "USD",
+  locale: "en-US",
 };
 
 const account3 = {
@@ -61,6 +87,36 @@ const inputLoanAmount = document.querySelector(".form__input--loan-amount");
 const inputCloseUsername = document.querySelector(".form__input--user");
 const inputClosePin = document.querySelector(".form__input--pin");
 
+const formatMovementDate = function (date) {
+  const calcdaysPassed = (date1, date2) =>
+    Math.round(Math.abs(date2 - date1) / (1000 * 60 * 60 * 24));
+
+  const daysPassed = calcdaysPassed(new Date(), date);
+  console.log(daysPassed);
+
+  if (daysPassed === 0) return "Today";
+  if (daysPassed === 1) return "Yesterday";
+  if (daysPassed <= 7) return `${daysPassed} days ago`;
+  else {
+    const day = `${date.getDate()}`.padStart(2, 0);
+    const month = `${date.getMonth() + 1}`.padStart(2, 0);
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  }
+};
+
+/// 1
+/// formatMovementDate = function date
+/// date is from the const date, which is a new date inside the acc.movementsdate
+/// const calcdaysPassed = date1,date2, and the function is
+/// date2 - date1, rounded to 24 hours, which is how many days (included with)
+/// math.round and math.abs
+
+//// 2
+/// const daysPassed = this function called with new Date(), and date
+/// date is called from below, which makes a new Date for each acc.movementdates[i]
+/// if (days passed === 0) it returns today etc
+
 const displayMovements = function (acc, sort = false) {
   containerMovements.innerHTML = "";
 
@@ -72,18 +128,33 @@ const displayMovements = function (acc, sort = false) {
     const type = mov > 0 ? "deposit" : "withdrawal";
 
     const date = new Date(acc.movementsDates[i]);
+    const displayDate = formatMovementDate(date);
 
     const html = `
     <div class="movements__row">
     <div class="movements__type movements__type--${type}">${i + 1} ${type}</div>
     <div class="movements__date">${displayDate}</div>
-
     <div class="movements__value">${mov}€</div>
   </div>
     `;
     containerMovements.insertAdjacentHTML("afterbegin", html);
   });
 };
+
+/// looping over the movs.foreach, and in each iteration we are generating
+/// the const html
+/// the .Date is from the const newDate element above
+//// they are then being generated from the acc.movementDates[i] part,
+/// of which are storing in movement dates
+/// the const day = etc are just holding the dates and years from the movementPart
+/// we are actually storing it in the displayDate which holds the string
+/// ane then applying them to the movements__date part of the html
+/// so that html is showing for each iteration of the loop
+
+/// in this, we are looping over the movs.forEach,
+/// and then once we'v looped over the accounts array
+/// we are using this to loop over the acc.movementsDates, and taking the
+
 // displayMovements(account1.movements);
 
 const calcDisplayBalance = function (acc) {
@@ -161,14 +232,6 @@ containerApp.style.opacity = 100;
 
 // day/month/yearX
 
-const timeNow = new Date();
-const day = `${timeNow.getDate()}`.padStart(2, 0);
-const month = `${timeNow.getMonth() + 1}`.padStart(2, 0);
-const year = timeNow.getFullYear();
-const hour = timeNow.getHours();
-const minutes = timeNow.getMinutes();
-labelDate.textContent = `${day}/${month}/${year}, ${hour}:${minutes}`;
-
 /// to add the zero at the beggining of day and month
 /// make template literal, and use padstart, 2 is length of characters,
 /// and 0 is what were adding
@@ -187,6 +250,16 @@ btnLogin.addEventListener("click", function (e) {
       currentAccount.owner.split(" ")[0]
     }`;
     containerApp.style.opacity = 100;
+
+    /// Create current date and time
+    const timeNow = new Date();
+    const day = `${timeNow.getDate()}`.padStart(2, 0);
+    const month = `${timeNow.getMonth() + 1}`.padStart(2, 0);
+    const year = timeNow.getFullYear();
+    const hour = `${timeNow.getHours()}`.padStart(2, 0);
+    const minutes = `${timeNow.getMinutes()}`.padStart(2, 0);
+    labelDate.textContent = `${day}/${month}/${year}, ${hour}:${minutes}`;
+
     /// clear input fields
     inputLoginUsername.value = inputLoginPin.value = "";
     inputLoginPin.blur();
@@ -244,9 +317,24 @@ btnTransfer.addEventListener("click", function (e) {
     currentAccount.movements.push(-amount);
     receiverAcc.movements.push(amount);
 
+    /// add transfer date
+    currentAccount.movementsDates.push(new Date().toISOString());
+    receiverAcc.movementsDates.push(new Date().toISOString());
+
+    /// Update UI
     updateUI(currentAccount);
   }
 });
+
+/// on btnTransfer
+/// if the if block is correct
+/// adding transfer date - currentAccount.movementDates.push
+/// pushes a new date that was made at that time, into this array
+/// we also do this on the receiverAcc, the receiverACC, finds the user we are
+/// sending too, and also pushes that same date on that account
+/// so we push the same date on the currentUser, and the receiver User
+/// we put it on loan date, but only need the currentAccount as we are not
+/// sending to anyone directly
 
 btnLoan.addEventListener("click", function (e) {
   e.preventDefault();
@@ -259,6 +347,9 @@ btnLoan.addEventListener("click", function (e) {
   ) {
     /// add movement
     currentAccount.movements.push(amount);
+
+    /// Add Loan Date
+    currentAccount.movementsDates.push(new Date().toISOString);
 
     // update Ui
     updateUI(currentAccount);
@@ -1261,3 +1352,28 @@ console.log(Date.now()); /// current timeStamp
 future.setFullYear(2040);
 console.log(future);
 /// changes year, also ones for month,date etc
+
+const futures = new Date(2037, 10, 19, 23, 5);
+console.log(+futures);
+
+/// using Number OR + operator, converts the date into milliseconds
+
+const calcdaysPassed = (date1, date2) =>
+  Math.abs(date2 - date1) / (1000 * 60 * 60 * 24);
+
+const days1 = calcdaysPassed(new Date(2037, 3, 14), new Date(2037, 3, 24));
+
+console.log(days1);
+
+/// the / sum converts it into days as
+/// 1000 converts millyseconds to seconds,
+/// *60 converts it to minutes
+/// *60 again converts it into hours
+/// *24 converts it into days (24 hours in a day)
+
+console.log(new Date(2038, 5, 19, 23, 30));
+/// 2038 is year
+/// 3 is month (0 based)
+/// 19 is date
+/// 23 is time
+/// 30 is minutes
