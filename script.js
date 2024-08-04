@@ -87,7 +87,7 @@ const inputLoanAmount = document.querySelector(".form__input--loan-amount");
 const inputCloseUsername = document.querySelector(".form__input--user");
 const inputClosePin = document.querySelector(".form__input--pin");
 
-const formatMovementDate = function (date) {
+const formatMovementDate = function (date, locale) {
   const calcdaysPassed = (date1, date2) =>
     Math.round(Math.abs(date2 - date1) / (1000 * 60 * 60 * 24));
 
@@ -98,24 +98,17 @@ const formatMovementDate = function (date) {
   if (daysPassed === 1) return "Yesterday";
   if (daysPassed <= 7) return `${daysPassed} days ago`;
   else {
-    const day = `${date.getDate()}`.padStart(2, 0);
-    const month = `${date.getMonth() + 1}`.padStart(2, 0);
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
+    // const day = `${date.getDate()}`.padStart(2, 0);
+    // const month = `${date.getMonth() + 1}`.padStart(2, 0);
+    // const year = date.getFullYear();
+    // return `${day}/${month}/${year}`;
+    return new Intl.DateTimeFormat(locale).format(date);
   }
 };
 
-/// 1
-/// formatMovementDate = function date
-/// date is from the const date, which is a new date inside the acc.movementsdate
-/// const calcdaysPassed = date1,date2, and the function is
-/// date2 - date1, rounded to 24 hours, which is how many days (included with)
-/// math.round and math.abs
-
-//// 2
-/// const daysPassed = this function called with new Date(), and date
-/// date is called from below, which makes a new Date for each acc.movementdates[i]
-/// if (days passed === 0) it returns today etc
+/// we are returning a dateTimeFormat that passes locale in there
+/// locale is passed in from the parameter at the top, to the bottom
+/// this is returning the locale from acc.locale, which is the account. locale
 
 const displayMovements = function (acc, sort = false) {
   containerMovements.innerHTML = "";
@@ -128,7 +121,7 @@ const displayMovements = function (acc, sort = false) {
     const type = mov > 0 ? "deposit" : "withdrawal";
 
     const date = new Date(acc.movementsDates[i]);
-    const displayDate = formatMovementDate(date);
+    const displayDate = formatMovementDate(date, acc.locale);
 
     const html = `
     <div class="movements__row">
@@ -236,6 +229,18 @@ containerApp.style.opacity = 100;
 /// make template literal, and use padstart, 2 is length of characters,
 /// and 0 is what were adding
 
+/// putting the timeNow into the labelDate.textContent
+/// adding the options object to add the hours,minute, day etc
+/// ading const locale, which takes the users web browser language
+/// then adding it as the first arguement in the new Intl.dateTimeFormat
+
+/// this formats the date and time like in that specific country
+/// we pass in a local string, usually language - country
+/// english - US
+/// .format, and we're formating timeNow, we is the current time
+/// so this displahs the new Date, in the format of en-us
+/// which is month, date, year
+
 btnLogin.addEventListener("click", function (e) {
   e.preventDefault();
 
@@ -253,12 +258,31 @@ btnLogin.addEventListener("click", function (e) {
 
     /// Create current date and time
     const timeNow = new Date();
-    const day = `${timeNow.getDate()}`.padStart(2, 0);
-    const month = `${timeNow.getMonth() + 1}`.padStart(2, 0);
-    const year = timeNow.getFullYear();
-    const hour = `${timeNow.getHours()}`.padStart(2, 0);
-    const minutes = `${timeNow.getMinutes()}`.padStart(2, 0);
-    labelDate.textContent = `${day}/${month}/${year}, ${hour}:${minutes}`;
+    const options = {
+      hour: "numeric",
+      minute: "numeric",
+      day: "numeric",
+      month: "numeric", /// can also use numeric, and '2-digit'
+      year: "numeric",
+    };
+
+    // const locale = navigator.language;
+    // console.log(locale);
+
+    labelDate.textContent = new Intl.DateTimeFormat(
+      currentAccount.locale,
+      options
+    ).format(timeNow);
+
+    /// this is getting the first arguement from currentAccount.Locale,
+    /// which is an object on the account
+
+    // const day = `${timeNow.getDate()}`.padStart(2, 0);
+    // const month = `${timeNow.getMonth() + 1}`.padStart(2, 0);
+    // const year = timeNow.getFullYear();
+    // const hour = `${timeNow.getHours()}`.padStart(2, 0);
+    // const minutes = `${timeNow.getMinutes()}`.padStart(2, 0);
+    // labelDate.textContent = `${day}/${month}/${year}, ${hour}:${minutes}`;
 
     /// clear input fields
     inputLoginUsername.value = inputLoginPin.value = "";
@@ -1377,3 +1401,20 @@ console.log(new Date(2038, 5, 19, 23, 30));
 /// 19 is date
 /// 23 is time
 /// 30 is minutes
+
+const nums = 3884764.23;
+
+const optionz = {
+  style: "currency",
+  unit: "mile-per-hour", /// can also do calsius
+  currency: "EUR",
+  // useGrouping: false,
+};
+
+console.log("US:", new Intl.NumberFormat("en-Us", optionz).format(nums));
+console.log("Germany:", new Intl.NumberFormat("de-DE", optionz).format(nums));
+console.log("Syria:", new Intl.NumberFormat("ar-SY", optionz).format(nums));
+console.log(
+  navigator.language,
+  new Intl.NumberFormat(navigator.language).format(nums)
+);
