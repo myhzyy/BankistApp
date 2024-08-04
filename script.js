@@ -106,9 +106,12 @@ const formatMovementDate = function (date, locale) {
   }
 };
 
-/// we are returning a dateTimeFormat that passes locale in there
-/// locale is passed in from the parameter at the top, to the bottom
-/// this is returning the locale from acc.locale, which is the account. locale
+const formatCur = function (value, locale, currency) {
+  return new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency: currency,
+  }).format(value);
+};
 
 const displayMovements = function (acc, sort = false) {
   containerMovements.innerHTML = "";
@@ -123,16 +126,32 @@ const displayMovements = function (acc, sort = false) {
     const date = new Date(acc.movementsDates[i]);
     const displayDate = formatMovementDate(date, acc.locale);
 
+    const formattedMov = formatCur(mov, acc.locale, acc.currency);
+
     const html = `
     <div class="movements__row">
     <div class="movements__type movements__type--${type}">${i + 1} ${type}</div>
     <div class="movements__date">${displayDate}</div>
-    <div class="movements__value">${mov}€</div>
+    <div class="movements__value">${formattedMov}</div>
   </div>
     `;
     containerMovements.insertAdjacentHTML("afterbegin", html);
   });
 };
+
+/// formatCur is a function that accepts a value, locale, and currency,
+/// this then returns new Intl,Number Format, which stores the style, currency, format
+/// this function is then stored by formattedMov, which ='s formatCur
+/// passing in mov, acc.locale and acc.currency
+/// this is then added to the html, passing in custom value, locale and currency
+/// for the individual
+
+/// adding internationalized dates
+/// formatted mov = new Numberformated
+/// this takes in what we are formatting, the acc.locale,
+/// then adding th4 style, currency. format, which is the mov of the for each
+/// this is then added to the template literal
+/// added currency. acc. currency to get the users currency
 
 /// looping over the movs.foreach, and in each iteration we are generating
 /// the const html
@@ -152,7 +171,8 @@ const displayMovements = function (acc, sort = false) {
 
 const calcDisplayBalance = function (acc) {
   acc.balance = acc.movements.reduce((acc, mov) => acc + mov, 0);
-  labelBalance.textContent = `${acc.balance}€`;
+
+  labelBalance.textContent = formatCur(acc.balance, acc.locale, acc.currency);
 };
 // calcDisplayBalance(account1.movements);
 
@@ -160,13 +180,17 @@ const calcDisplaySummary = function (acc) {
   const incomes = acc.movements
     .filter((mov) => mov > 0)
     .reduce((acc, mov) => acc + mov, 0);
-  labelSumIn.textContent = `${incomes}€ `;
+  labelSumIn.textContent = formatCur(incomes, acc.locale, acc.currency);
 
   const outgoings = acc.movements
     .filter((mov) => mov < 0)
     .reduce((acc, mov) => acc + mov, 0);
   console.log(outgoings);
-  labelSumOut.textContent = `${Math.abs(outgoings)}€`;
+  labelSumOut.textContent = formatCur(
+    Math.abs(outgoings),
+    acc.locale,
+    acc.currency
+  );
 
   const interest = acc.movements
     .filter((mov) => mov > 0)
@@ -177,8 +201,15 @@ const calcDisplaySummary = function (acc) {
     })
     .reduce((acc, int) => acc + int, 0);
   console.log(interest);
-  labelSumInterest.textContent = `${Math.abs(interest)}€`;
+  labelSumInterest.textContent = formatCur(
+    Math.abs(interest),
+    acc.locale,
+    acc.currency
+  );
 };
+
+/// changing each incomes, outgoings and intrest to the same function
+/// but passing in the individual value for each
 
 /// filter
 /// .filter is only storing values that are greater than 0 (positive values)
@@ -1418,3 +1449,20 @@ console.log(
   navigator.language,
   new Intl.NumberFormat(navigator.language).format(nums)
 );
+
+// const ingredientAll = ["olives", "spinach"];
+
+// const pizzaTimer = setTimeout(
+//   (ingredient1, ingredient2) =>
+//     console.log(`Here is your pizza with ${ingredient1} and ${ingredient2}`),
+//   3000,
+//   ...ingredientAll
+// );
+
+// console.log("Waiting...");
+
+// if (ingredientAll.includes("spinach")) clearTimeout(pizzaTimer);
+
+// /// we stored the timer in a const, pizzaTimer
+// /// we then made an if statement, saying if the array includes spinach,
+// /// then the pizzaTimer, will clearTimeout, making it not run
