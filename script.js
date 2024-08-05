@@ -247,7 +247,9 @@ const updateUI = function (acc) {
 
 /// event handler
 
-let currentAccount;
+let currentAccount, timer;
+
+/// adding to parent scope so that it can be accessed
 
 /// FAKE ALWAYS LOGGED IN
 currentAccount = account1;
@@ -262,8 +264,6 @@ const startLogOutTimer = function () {
     const sec = String(time % 60).padStart(2, 0);
 
     labelTimer.textContent = `${min}: ${sec}`;
-    // decrease 1s
-    time--; /// time = time - 1
 
     /// Log out before 0
     if (time === 0) {
@@ -271,15 +271,22 @@ const startLogOutTimer = function () {
       labelWelcome.textContent = `Log in to get started`;
       containerApp.style.opacity = 0;
     }
+    // decrease 1s
+    time--; /// time = time - 1
   };
 
   // Set time to 5 minutes
-  let time = 10;
+  let time = 600;
 
   // call timer every second
   tick();
   const timer = setInterval(tick, 1000);
+
+  return timer;
 };
+
+/// moved timer down after the if statement so that is actually logs out at 0
+/// and not 1
 
 /// start log out timer
 /// set the time you want
@@ -369,12 +376,21 @@ btnLogin.addEventListener("click", function (e) {
     inputLoginUsername.value = inputLoginPin.value = "";
     inputLoginPin.blur();
 
-    startLogOutTimer();
+    /// timer
+    if (timer) clearInterval(timer);
+    timer = startLogOutTimer();
 
     // Update Ui
     updateUI(currentAccount);
   }
 });
+
+/// it starts with no timer
+/// when we log in, it starts the startLogOutTimer that is was made from the
+/// return keyword. this makes the timer
+/// when we log into another account, the if statement then picks up that there
+/// is a timer, and then clears the interval(timer)
+/// then after it makes another one
 
 btnClose.addEventListener("click", function (e) {
   e.preventDefault();
@@ -430,6 +446,10 @@ btnTransfer.addEventListener("click", function (e) {
 
     /// Update UI
     updateUI(currentAccount);
+
+    /// Reset Timer
+    clearInterval(timer);
+    timer = startLogOutTimer();
   }
 });
 
@@ -461,6 +481,10 @@ btnLoan.addEventListener("click", function (e) {
 
       // update Ui
       updateUI(currentAccount);
+
+      /// Reset Timer
+      clearInterval(timer);
+      timer = startLogOutTimer();
     }, 2500);
   }
   inputLoanAmount.value = "";
