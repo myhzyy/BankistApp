@@ -254,6 +254,56 @@ currentAccount = account1;
 updateUI(currentAccount);
 containerApp.style.opacity = 100;
 
+///////////////////
+
+const startLogOutTimer = function () {
+  const tick = function () {
+    const min = String(Math.trunc(time / 60)).padStart(2, 0);
+    const sec = String(time % 60).padStart(2, 0);
+
+    labelTimer.textContent = `${min}: ${sec}`;
+    // decrease 1s
+    time--; /// time = time - 1
+
+    /// Log out before 0
+    if (time === 0) {
+      clearInterval(timer);
+      labelWelcome.textContent = `Log in to get started`;
+      containerApp.style.opacity = 0;
+    }
+  };
+
+  // Set time to 5 minutes
+  let time = 10;
+
+  // call timer every second
+  tick();
+  const timer = setInterval(tick, 1000);
+};
+
+/// start log out timer
+/// set the time you want
+/// const timer, set interval - this will do the function every second
+/// const min Time / 60 (because 60 seconds in a min)
+/// we then make this a string so that we can add the padStart on the end so it
+/// doesn't show lots of decimal places
+/// same with sec
+
+/// labelTimer.textContent is the string of both the min and seconss printed
+/// time--, is decreasing the timer by 1 second each interval
+
+/// if (time === 0), then we want to log out by clearing the interalTimer (with)
+/// timer passed in
+/// set the label welcome screen back to log in, and opacity to 100
+/// the 1000 makes the intervaltimer do this every 1 second
+
+/// makes a timer that starts at 100,
+/// that decreases by 1 every second
+/// it is then called in the login section
+
+// in each call, print the remaining time to UI
+
+//  When 0 second, stop timer and log out user
 // day/month/yearX
 
 /// to add the zero at the beggining of day and month
@@ -318,6 +368,8 @@ btnLogin.addEventListener("click", function (e) {
     /// clear input fields
     inputLoginUsername.value = inputLoginPin.value = "";
     inputLoginPin.blur();
+
+    startLogOutTimer();
 
     // Update Ui
     updateUI(currentAccount);
@@ -394,20 +446,22 @@ btnTransfer.addEventListener("click", function (e) {
 btnLoan.addEventListener("click", function (e) {
   e.preventDefault();
 
-  const amount = Number(inputLoanAmount.value);
+  const amount = Math.floor(inputLoanAmount.value);
 
   if (
     amount > 0 &&
     currentAccount.movements.some((mov) => mov >= amount * 0.1)
   ) {
     /// add movement
-    currentAccount.movements.push(amount);
+    setTimeout(function () {
+      currentAccount.movements.push(amount);
 
-    /// Add Loan Date
-    currentAccount.movementsDates.push(new Date().toISOString);
+      /// Add Loan Date
+      currentAccount.movementsDates.push(new Date().toISOString());
 
-    // update Ui
-    updateUI(currentAccount);
+      // update Ui
+      updateUI(currentAccount);
+    }, 2500);
   }
   inputLoanAmount.value = "";
 });
@@ -419,6 +473,8 @@ btnSort.addEventListener("click", function (e) {
   displayMovements(currentAccount, !sorted);
   sorted = !sorted;
 });
+
+/// wrapping all the code inside curly braces and adding setTimeout
 
 /// TOGGLING
 /// let sorted, stores the false state. it's false as it not sorted
@@ -1450,19 +1506,27 @@ console.log(
   new Intl.NumberFormat(navigator.language).format(nums)
 );
 
-// const ingredientAll = ["olives", "spinach"];
+const ingredientAll = ["olives", "spinach"];
 
-// const pizzaTimer = setTimeout(
-//   (ingredient1, ingredient2) =>
-//     console.log(`Here is your pizza with ${ingredient1} and ${ingredient2}`),
-//   3000,
-//   ...ingredientAll
-// );
+const pizzaTimer = setTimeout(
+  (ingredient1, ingredient2) =>
+    console.log(`Here is your pizza with ${ingredient1} and ${ingredient2}`),
+  3000,
+  ...ingredientAll
+);
 
-// console.log("Waiting...");
+console.log("Waiting...");
 
-// if (ingredientAll.includes("spinach")) clearTimeout(pizzaTimer);
+if (ingredientAll.includes("spinach")) clearTimeout(pizzaTimer);
 
-// /// we stored the timer in a const, pizzaTimer
-// /// we then made an if statement, saying if the array includes spinach,
-// /// then the pizzaTimer, will clearTimeout, making it not run
+/// we stored the timer in a const, pizzaTimer
+/// we then made an if statement, saying if the array includes spinach,
+/// then the pizzaTimer, will clearTimeout, making it not run
+
+/// setInterval
+// setInterval(function () {
+//   const now = new Date();
+//   console.log(now);
+// }, 5000);
+
+// /// runs the code every 5 seconds
