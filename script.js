@@ -1542,15 +1542,3 @@ const pizzaTimer = setTimeout(
 console.log("Waiting...");
 
 if (ingredientAll.includes("spinach")) clearTimeout(pizzaTimer);
-
-/// we stored the timer in a const, pizzaTimer
-/// we then made an if statement, saying if the array includes spinach,
-/// then the pizzaTimer, will clearTimeout, making it not run
-
-/// setInterval
-// setInterval(function () {
-//   const now = new Date();
-//   console.log(now);
-// }, 5000);
-
-// /// runs the code every 5 seconds
