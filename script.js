@@ -920,14 +920,9 @@ console.log(account);
 
 /// EQUALITY
 console.log(movements.includes(-130));
-/// will return  true or false
 
 /// SOME CONDITION
 console.log(movements.some((mov) => mov === -130));
-/// the mov is each iteration and it goes over the array with this
-/// so this is going over the array and seeing if any if equal to -130
-/// only needs one to be true
-/// will return true or false
 
 const anyDepositss = movements.some((mov) => mov > 0);
 console.log(anyDepositss);
